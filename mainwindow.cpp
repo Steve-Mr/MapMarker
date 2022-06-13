@@ -3,6 +3,7 @@
 #include "QXmlStreamReader"
 #include "QDebug"
 #include "QMouseEvent"
+#include "QPainter"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -61,6 +62,17 @@ void MainWindow::on_Button_mark_clicked()
 {
     qDebug() << ui->Label_map->geometry() << Qt::endl;
     ui->Label_map->installEventFilter(this);
+
+    /*
+    int h = ui->Label_map->height();
+    int w = ui->Label_map->width();
+    QPixmap pix(w, h);
+    QPainter paint(&pix);
+    pix.fill( Qt::white );
+    paint.setPen(QColor(0, 0, 0, 255));
+    paint.drawRect(QRect(80,120,200,100));
+    ui->Label_map->setPixmap(pix);
+    */
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){
@@ -78,6 +90,20 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
         double x = point.x()/double(ui->Label_map->pixmap(Qt::ReturnByValue).width())*map_width*scale_num;
         double y = (label_height - point.y())/double(ui->Label_map->pixmap(Qt::ReturnByValue).height())*map_height*scale_num;
         ui->Text_points->append(QString::number(x) + "," + QString::number(y));
+
+        auto pix = ui->Label_map->pixmap(Qt::ReturnByValue);
+        QPainter painter(&pix);
+        QPen paintPen(Qt::red);
+        paintPen.setWidth(10);
+        painter.setPen(paintPen);
+        painter.drawPoint(point);
+
+        ui->Label_map->setPixmap(pix);
+
     }
     return false;
+}
+
+void QLabel::paintEvent(QPaintEvent *){
+
 }
