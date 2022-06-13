@@ -20,7 +20,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_Button_load_config_clicked();
+    void on_Button_load_map_clicked();
+
+    void on_Text_scale_textChanged();
+
+    void on_Button_save_scale_clicked();
 
 private:
     Ui::MainWindow *ui;

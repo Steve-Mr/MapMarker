@@ -8,44 +8,38 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->Button_save_scale->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-void MainWindow::on_Button_load_config_clicked()
+
+void MainWindow::on_Button_load_map_clicked()
 {
-    QString configFileName = QFileDialog::getOpenFileName();
-    QFile configFile(configFileName);
-    currentFile = configFileName;
-    if(!configFile.open(QIODevice::ReadOnly | QFile::Text)){
-        QMessageBox::warning(this, "Warning", "Cannot open file: "+ configFile.errorString());
+    QString mapImageFile = QFileDialog::getOpenFileName(this, "Choose Map", "/home", tr("PGM(*.pgm)"));
+    qDebug() << mapImageFile << Qt::endl;
+    QPixmap image_map(mapImageFile);
+
+    ui->Label_map->setScaledContents(true);
+    ui->Label_map->setPixmap(image_map);
+}
+
+
+void MainWindow::on_Text_scale_textChanged()
+{
+    ui->Button_save_scale->setEnabled(true);
+}
+
+
+void MainWindow::on_Button_save_scale_clicked()
+{
+    QString scale = ui->Text_scale->toPlainText();
+    if (scale != NULL){
+        qDebug() << scale << Qt::endl;
+    }else{
+        qDebug() << "no value" << Qt::endl;
     }
-    QTextStream in(&configFile);
-    QString config = in.readAll();
-
-    QXmlStreamReader reader(config);
-    while(!reader.atEnd() && !reader.hasError()){
-        if(reader.readNext() == QXmlStreamReader::StartElement){
-            if(reader.name() == "include" || reader.name() == "node"){
-                for(auto &attribute : reader.attributes()){
-                    qDebug() << attribute.name() << attribute.value() << endl;
-                }
-            }
-            if(reader.name() == "node"){
-                QXmlStreamAttributes attributes = reader.attributes();
-                if(attributes.hasAttribute("name") && attributes.value("name") == "map_server"){
-                    qDebug() << attributes.value("args") << Qt::endl;
-                }
-            }
-            if(reader.name() == "include"){
-
-            }
-        }
-    }
-    ui->Text_config->setText(config);
-    configFile.close();
-
 }
 
