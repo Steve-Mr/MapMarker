@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>161</width>
-      <height>26</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -43,7 +43,7 @@
       <x>10</x>
       <y>80</y>
       <width>161</width>
-      <height>26</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -61,6 +61,29 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="Text_points">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>161</width>
+      <height>481</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Button_mark">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mark Points</string>
     </property>
    </widget>
   </widget>

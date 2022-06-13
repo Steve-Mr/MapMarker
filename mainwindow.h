@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private slots:
     void on_Button_load_map_clicked();
@@ -26,8 +27,17 @@ private slots:
 
     void on_Button_save_scale_clicked();
 
+    void on_Button_mark_clicked();
+
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";
+    bool isScaleSet = false;
+    bool isMarkerClicked = false;
+    int map_width;
+    int map_height;
+    int label_width;
+    int label_height;
+    double scale_num;
 };
 #endif // MAINWINDOW_H
