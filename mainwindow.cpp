@@ -5,6 +5,8 @@
 #include "QMouseEvent"
 #include "QPainter"
 
+#include "sstream"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -12,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->Button_save_scale->setEnabled(false);
     ui->Button_mark->setEnabled(false);
+    ui->Button_save_points->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -21,11 +24,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Button_load_map_clicked()
 {
-    QString mapImageFile = QFileDialog::getOpenFileName(this, "Choose Map",
+    ui->Text_points->clear();
+    ui->Button_save_points->setEnabled(false);
+    if(isMapLoaded){
+        isMapLoaded = false;
+        isScaleSet = false;
+        isMarkerClicked = false;
+        ui->Button_mark->setEnabled(false);
+        ui->Text_scale->clear();
+    }
+
+    ui->Button_save_scale->setEnabled(false);
+
+
+    currentFile = QFileDialog::getOpenFileName(this, "Choose Map",
                                                         "/home/maary/文档/code/robot/ourcar/navigation_stage/stage_config/maps",
                                                         tr("PGM(*.pgm)"));
-    qDebug() << mapImageFile << Qt::endl;
-    QPixmap image_map(mapImageFile);
+    qDebug() << currentFile << Qt::endl;
+    QPixmap image_map(currentFile);
 
     map_width = image_map.width();
     map_height = image_map.height();
@@ -33,6 +49,10 @@ void MainWindow::on_Button_load_map_clicked()
     label_width = ui->Label_map->width();
     label_height = ui->Label_map->height();
     ui->Label_map->setPixmap(image_map.scaled(label_width, label_height, Qt::KeepAspectRatio));
+
+    isMapLoaded = true;
+    if(isScaleSet) ui->Button_mark->setEnabled(true);
+
 }
 
 
@@ -45,15 +65,16 @@ void MainWindow::on_Text_scale_textChanged()
 void MainWindow::on_Button_save_scale_clicked()
 {
     QString scale = ui->Text_scale->toPlainText();
-    if (scale != NULL){
-        //qDebug() << scale << Qt::endl;
+    std::string scale_string = scale.toStdString();
+    if (is_numeric(scale_string)){
         ui->Button_save_scale->setEnabled(false);
-        ui->Button_mark->setEnabled(true);
-        //TODO: 增加判断，目前判断不合理
         scale_num = scale.toDouble();
+
+        isScaleSet = true;
+        if(isMapLoaded) ui->Button_mark->setEnabled(true);
         qDebug() << QString::number(scale_num) << Qt::endl;
     }else{
-        qDebug() << "no value" << Qt::endl;
+        qDebug() << "error value" << Qt::endl;
     }
 }
 
@@ -61,18 +82,17 @@ void MainWindow::on_Button_save_scale_clicked()
 void MainWindow::on_Button_mark_clicked()
 {
     qDebug() << ui->Label_map->geometry() << Qt::endl;
-    ui->Label_map->installEventFilter(this);
-
-    /*
-    int h = ui->Label_map->height();
-    int w = ui->Label_map->width();
-    QPixmap pix(w, h);
-    QPainter paint(&pix);
-    pix.fill( Qt::white );
-    paint.setPen(QColor(0, 0, 0, 255));
-    paint.drawRect(QRect(80,120,200,100));
-    ui->Label_map->setPixmap(pix);
-    */
+    if(!isMarkerClicked){
+        ui->Label_map->installEventFilter(this);
+        ui->Button_mark->setText("Done");
+        isMarkerClicked = true;
+    }else{
+        ui->Label_map->removeEventFilter(this);
+        ui->Button_mark->setText("Mark Points");
+        ui->Button_save_points->setEnabled(true);
+        ui->Button_mark->setEnabled(false);
+        isMarkerClicked = false;
+    }
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){
@@ -104,6 +124,45 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
     return false;
 }
 
-void QLabel::paintEvent(QPaintEvent *){
-
+void MainWindow::on_Text_points_textChanged()
+{
+    ui->Button_save_points->setEnabled(true);
 }
+
+
+bool MainWindow::is_numeric (std::string const & str)
+{
+    auto result = double();
+    auto i = std::istringstream(str);
+
+    i >> result;
+
+    return !i.fail() && i.eof();
+}
+
+void MainWindow::on_Button_save_points_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as");
+    QFile file(fileName);
+    if(!file.open(QFile::WriteOnly | QFile::Text)){
+        QMessageBox::warning(this, "Warning", "Cannot save file: " + file.errorString());
+        return;
+    }
+    QTextStream out(&file);
+    QString text = ui->Text_points->toPlainText();
+    out << text;
+    file.close();
+
+    ui->Button_save_points->setEnabled(false);
+    ui->Text_points->clear();
+    ui->Button_mark->setEnabled(true);
+    QPixmap image_map(currentFile);
+
+    map_width = image_map.width();
+    map_height = image_map.height();
+
+    label_width = ui->Label_map->width();
+    label_height = ui->Label_map->height();
+    ui->Label_map->setPixmap(image_map.scaled(label_width, label_height, Qt::KeepAspectRatio));
+}
+

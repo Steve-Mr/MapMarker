@@ -29,9 +29,14 @@ private slots:
 
     void on_Button_mark_clicked();
 
+    void on_Text_points_textChanged();
+
+    void on_Button_save_points_clicked();
+
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";
+    bool isMapLoaded = false;
     bool isScaleSet = false;
     bool isMarkerClicked = false;
     int map_width;
@@ -39,5 +44,7 @@ private:
     int label_width;
     int label_height;
     double scale_num;
+    bool is_numeric(std::string const & str);
+
 };
 #endif // MAINWINDOW_H

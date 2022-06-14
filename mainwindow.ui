@@ -69,7 +69,7 @@
       <x>10</x>
       <y>140</y>
       <width>161</width>
-      <height>481</height>
+      <height>451</height>
      </rect>
     </property>
    </widget>
@@ -84,6 +84,19 @@
     </property>
     <property name="text">
      <string>Mark Points</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Button_save_points">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>600</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
     </property>
    </widget>
   </widget>
