@@ -6,6 +6,9 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QTextBrowser>
+#include <QPlainTextEdit>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,6 +38,17 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QPushButton *buttonLoadMap;
+    QPushButton *buttonSaveScale;
+    QPushButton *buttonMarkPoints;
+    QPushButton *buttonSavePoints;
+
+    QPlainTextEdit *textMapScale;
+    QTextBrowser *textPointsCoord;
+
+    QLabel *labelMap;
+
     QString currentFile = "";
     bool isMapLoaded = false;
     bool isScaleSet = false;
@@ -44,7 +58,9 @@ private:
     int label_width;
     int label_height;
     double scale_num;
+
     bool is_numeric(std::string const & str);
+    void loadToLabel(QString currentFile);
 
 };
 #endif // MAINWINDOW_H
