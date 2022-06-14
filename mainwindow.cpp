@@ -40,7 +40,7 @@ void MainWindow::on_Button_load_map_clicked()
     currentFile = QFileDialog::getOpenFileName(this, "Choose Map",
                                                         "/home/maary/文档/code/robot/ourcar/navigation_stage/stage_config/maps",
                                                         tr("PGM(*.pgm)"));
-    qDebug() << currentFile << Qt::endl;
+    qDebug() << currentFile << endl;
     QPixmap image_map(currentFile);
 
     map_width = image_map.width();
@@ -72,16 +72,16 @@ void MainWindow::on_Button_save_scale_clicked()
 
         isScaleSet = true;
         if(isMapLoaded) ui->Button_mark->setEnabled(true);
-        qDebug() << QString::number(scale_num) << Qt::endl;
+        qDebug() << QString::number(scale_num) << endl;
     }else{
-        qDebug() << "error value" << Qt::endl;
+        qDebug() << "error value" << endl;
     }
 }
 
 
 void MainWindow::on_Button_mark_clicked()
 {
-    qDebug() << ui->Label_map->geometry() << Qt::endl;
+    qDebug() << ui->Label_map->geometry() << endl;
     if(!isMarkerClicked){
         ui->Label_map->installEventFilter(this);
         ui->Button_mark->setText("Done");
@@ -104,14 +104,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
     }
     const QMouseEvent* const mEvent = static_cast<const QMouseEvent*>(event);
     const QPoint point = mEvent->pos();
-    int display_width = ui->Label_map->pixmap(Qt::ReturnByValue).width();
-    int display_height = ui->Label_map->pixmap(Qt::ReturnByValue).height();
+    QPixmap map = *(ui->Label_map->pixmap());
+    int display_width = map.width();
+    int display_height = map.height();
     if (point.x() <= display_width && point.y() <= display_height){
-        double x = point.x()/double(ui->Label_map->pixmap(Qt::ReturnByValue).width())*map_width*scale_num;
-        double y = (label_height - point.y())/double(ui->Label_map->pixmap(Qt::ReturnByValue).height())*map_height*scale_num;
+        double x = point.x()/double(map.width())*map_width*scale_num;
+        double y = (label_height - point.y())/double(map.height())*map_height*scale_num;
         ui->Text_points->append(QString::number(x) + "," + QString::number(y));
 
-        auto pix = ui->Label_map->pixmap(Qt::ReturnByValue);
+        auto pix = *(ui->Label_map->pixmap());
         QPainter painter(&pix);
         QPen paintPen(Qt::red);
         paintPen.setWidth(10);
