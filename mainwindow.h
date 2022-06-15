@@ -5,6 +5,9 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QTextBrowser>
+#include <QPlainTextEdit>
+#include <QLabel>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -21,20 +24,32 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
 
 private slots:
-    void on_Button_load_map_clicked();
 
-    void on_Text_scale_textChanged();
+    void on_buttonLoadMap_clicked();
 
-    void on_Button_save_scale_clicked();
+    void on_textScale_textChanged();
 
-    void on_Button_mark_clicked();
+    void on_buttonSaveScale_clicked();
 
-    void on_Text_points_textChanged();
+    void on_buttonMark_clicked();
 
-    void on_Button_save_points_clicked();
+    void on_textCoords_textChanged();
+
+    void on_buttonSaveCoords_clicked();
 
 private:
     Ui::MainWindow *ui;
+
+    QPushButton *buttonLoadMap;
+    QPushButton *buttonSaveScale;
+    QPushButton *buttonMarkPoints;
+    QPushButton *buttonSaveCoords;
+
+    QPlainTextEdit *textMapScale;
+    QTextBrowser *textPointsCoord;
+
+    QLabel *labelMap;
+
     QString currentFile = "";
     bool isMapLoaded = false;
     bool isScaleSet = false;
@@ -44,7 +59,9 @@ private:
     int label_width;
     int label_height;
     double scale_num;
+
     bool is_numeric(std::string const & str);
+    void loadToLabel(QString currentFile);
 
 };
 #endif // MAINWINDOW_H
