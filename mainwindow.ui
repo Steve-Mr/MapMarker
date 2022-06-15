@@ -7,13 +7,37 @@
     <x>0</x>
     <y>0</y>
     <width>1267</width>
-    <height>683</height>
+    <height>655</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1267</width>
+    <height>632</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1267</width>
+    <height>655</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="minimumSize">
+    <size>
+     <width>1267</width>
+     <height>632</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>1267</width>
+     <height>632</height>
+    </size>
+   </property>
    <widget class="QPushButton" name="buttonLoadMap">
     <property name="geometry">
      <rect>
@@ -99,16 +123,6 @@
      <string>Save</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1267</width>
-     <height>28</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
