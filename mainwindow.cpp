@@ -146,7 +146,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
     const QMouseEvent* const mEvent = static_cast<const QMouseEvent*>(event);
     const QPoint point = mEvent->pos();
     // 获取当前显示的地图图片
-    QPixmap map = *(ui->Label_map->pixmap());
+    QPixmap map = *(ui->labelMap->pixmap());
     // Label 中显示的图片和 Label 大小可能不同
     int display_width = map.width();
     int display_height = map.height();
@@ -156,12 +156,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
         // 记录鼠标坐标时原点为左上角点
         // 地图坐标原点为左下角
         double y = (label_height - point.y())/double(map.height())*map_height*scale_num;
-        ui->Text_points->append(QString::number(x) + "," + QString::number(y));
+        ui->textCoords->append(QString::number(x) + "," + QString::number(y));
 
         // 在 Label 显示的图片上进行已标点的绘制和显示
         // 每添加一个点则设置一张新图片
         // TODO： 使用继承重写 Qlabel 的方法
-        auto pix = *(ui->Label_map->pixmap());
+        auto pix = *(ui->labelMap->pixmap());
         QPainter painter(&pix);
         QPen paintPen(Qt::red);
         paintPen.setWidth(10);
