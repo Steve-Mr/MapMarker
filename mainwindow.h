@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QFile>
 #include <QFileDialog>
 #include <QTextStream>
@@ -9,6 +8,7 @@
 #include <QTextBrowser>
 #include <QPlainTextEdit>
 #include <QLabel>
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

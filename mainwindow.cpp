@@ -52,8 +52,9 @@ void MainWindow::on_buttonLoadMap_clicked()
     currentFile = QFileDialog::getOpenFileName(this, "Choose Map",
                                                         "/home/maary/文档/code/robot/ourcar/navigation_stage/stage_config/maps",
                                                         tr("PGM(*.pgm)"));
-    qDebug() << currentFile << Qt::endl;
+
     loadToLabel(currentFile);
+    qDebug() << currentFile << endl;
 
     isMapLoaded = true;
     if(isScaleSet) buttonMarkPoints->setEnabled(true);
@@ -78,18 +79,20 @@ void MainWindow::on_buttonSaveScale_clicked()
         scale_num = scale.toDouble();
 
         isScaleSet = true;
+
         if(isMapLoaded) buttonMarkPoints->setEnabled(true);
-        qDebug() << QString::number(scale_num) << Qt::endl;
+        qDebug() << QString::number(scale_num) << endl;
     }else{
-        qDebug() << "error value" << Qt::endl;
+        qDebug() << "error value" << endl;
     }
 }
 
 
 void MainWindow::on_buttonMark_clicked()
 {
-    qDebug() << labelMap->geometry() << Qt::endl;
+    qDebug() << labelMap->geometry() << endl;
     // 类似 toggleButton，在 Mark Points 和 Done 两种状态之间切换
+
     if(!isMarkerClicked){
         labelMap->installEventFilter(this);
         buttonMarkPoints->setText("Done");
@@ -142,24 +145,23 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
     }
     const QMouseEvent* const mEvent = static_cast<const QMouseEvent*>(event);
     const QPoint point = mEvent->pos();
-
-    //获取当前显示的地图图片
-    auto pix = labelMap->pixmap(Qt::ReturnByValue);
+    // 获取当前显示的地图图片
+    QPixmap map = *(ui->Label_map->pixmap());
     // Label 中显示的图片和 Label 大小可能不同
-    int display_width = pix.width();
-    int display_height = pix.height();
+    int display_width = map.width();
+    int display_height = map.height();
     if (point.x() <= display_width && point.y() <= display_height){
         // 地图上坐标 X = 图上点坐标 X点 / 图片宽度 * 地图分辨率 * 比率
-        double x = point.x()/double(display_width)*map_width*scale_num;
+        double x = point.x()/double(map.width())*map_width*scale_num;
         // 记录鼠标坐标时原点为左上角点
         // 地图坐标原点为左下角
-        double y = (label_height - point.y())/double(display_height)
-                *map_height*scale_num;
-        textPointsCoord->append(QString::number(x) + "," + QString::number(y));
+        double y = (label_height - point.y())/double(map.height())*map_height*scale_num;
+        ui->Text_points->append(QString::number(x) + "," + QString::number(y));
 
         // 在 Label 显示的图片上进行已标点的绘制和显示
         // 每添加一个点则设置一张新图片
         // TODO： 使用继承重写 Qlabel 的方法
+        auto pix = *(ui->Label_map->pixmap());
         QPainter painter(&pix);
         QPen paintPen(Qt::red);
         paintPen.setWidth(10);
