@@ -14,19 +14,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     // 初始化 UI
 
-    buttonLoadMap = ui->Button_load_map;
-    buttonSaveScale = ui->Button_save_scale;
-    buttonMarkPoints = ui->Button_mark;
-    buttonSavePoints = ui->Button_save_points;
+    buttonLoadMap = ui->buttonLoadMap;
+    buttonSaveScale = ui->buttonSaveScale;
+    buttonMarkPoints = ui->buttonMark;
+    buttonSaveCoords = ui->buttonSaveCoords;
 
-    textMapScale = ui->Text_scale;
-    textPointsCoord = ui->Text_points;
+    textMapScale = ui->textScale;
+    textPointsCoord = ui->textCoords;
 
-    labelMap = ui->Label_map;
+    labelMap = ui->labelMap;
 
     buttonSaveScale->setEnabled(false);
     buttonMarkPoints->setEnabled(false);
-    buttonSavePoints->setEnabled(false);
+    buttonSaveCoords->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -34,11 +34,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_Button_load_map_clicked()
+void MainWindow::on_buttonLoadMap_clicked()
 {
     // 加载地图需要清空对应数据
     textPointsCoord->clear();
-    buttonSavePoints->setEnabled(false);
+    buttonSaveCoords->setEnabled(false);
     if(isMapLoaded){
         // 尚未加载地图则以下状态不需要修改
         isMapLoaded = false;
@@ -48,7 +48,6 @@ void MainWindow::on_Button_load_map_clicked()
         textMapScale->clear();
     }
     buttonSaveScale->setEnabled(false);
-
 
     currentFile = QFileDialog::getOpenFileName(this, "Choose Map",
                                                         "/home/maary/文档/code/robot/ourcar/navigation_stage/stage_config/maps",
@@ -62,14 +61,14 @@ void MainWindow::on_Button_load_map_clicked()
 }
 
 
-void MainWindow::on_Text_scale_textChanged()
+void MainWindow::on_textScale_textChanged()
 {
     buttonSaveScale->setEnabled(true);
     // 输入 scale 之后才可以保存
 }
 
 
-void MainWindow::on_Button_save_scale_clicked()
+void MainWindow::on_buttonSaveScale_clicked()
 {
     // 如果输入的 Scale 是数字则保存并且修改 isScaleSet 状态
     QString scale = textMapScale->toPlainText();
@@ -87,7 +86,7 @@ void MainWindow::on_Button_save_scale_clicked()
 }
 
 
-void MainWindow::on_Button_mark_clicked()
+void MainWindow::on_buttonMark_clicked()
 {
     qDebug() << labelMap->geometry() << Qt::endl;
     // 类似 toggleButton，在 Mark Points 和 Done 两种状态之间切换
@@ -99,10 +98,38 @@ void MainWindow::on_Button_mark_clicked()
         // 点击 Done 则不可再标点，只能保存现有点坐标
         labelMap->removeEventFilter(this);
         buttonMarkPoints->setText("Mark Points");
-        buttonSavePoints->setEnabled(true);
+        buttonSaveCoords->setEnabled(true);
         buttonMarkPoints->setEnabled(false);
         isMarkerClicked = false;
     }
+}
+
+
+void MainWindow::on_textCoords_textChanged()
+{
+    buttonSaveCoords->setEnabled(true);
+}
+
+
+void MainWindow::on_buttonSaveCoords_clicked()
+{
+    // 将坐标保存为文件
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as");
+    QFile file(fileName);
+    if(!file.open(QFile::WriteOnly | QFile::Text)){
+        QMessageBox::warning(this, "Warning", "Cannot save file: " + file.errorString());
+        return;
+    }
+    QTextStream out(&file);
+    QString text = textPointsCoord->toPlainText();
+    out << text;
+    file.close();
+
+    // 点击 Save 保存后清空现有数据，但可以重新标点进行保存
+    buttonSaveCoords->setEnabled(false);
+    textPointsCoord->clear();
+    buttonMarkPoints->setEnabled(true);
+    loadToLabel(currentFile);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){
@@ -145,11 +172,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event){
     return false;
 }
 
-void MainWindow::on_Text_points_textChanged()
-{
-    buttonSavePoints->setEnabled(true);
-}
-
 
 bool MainWindow::is_numeric (std::string const & str)
 {
@@ -161,26 +183,7 @@ bool MainWindow::is_numeric (std::string const & str)
     return !i.fail() && i.eof();
 }
 
-void MainWindow::on_Button_save_points_clicked()
-{
-    // 将坐标保存为文件
-    QString fileName = QFileDialog::getSaveFileName(this, "Save as");
-    QFile file(fileName);
-    if(!file.open(QFile::WriteOnly | QFile::Text)){
-        QMessageBox::warning(this, "Warning", "Cannot save file: " + file.errorString());
-        return;
-    }
-    QTextStream out(&file);
-    QString text = textPointsCoord->toPlainText();
-    out << text;
-    file.close();
 
-    // 点击 Save 保存后清空现有数据，但可以重新标点进行保存
-    buttonSavePoints->setEnabled(false);
-    textPointsCoord->clear();
-    buttonMarkPoints->setEnabled(true);
-    loadToLabel(currentFile);
-}
 
 void MainWindow::loadToLabel(QString currentFile){
     // 将 currentFile 对应的文件加载到 QLbael 中
