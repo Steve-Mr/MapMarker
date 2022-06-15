@@ -7,14 +7,38 @@
     <x>0</x>
     <y>0</y>
     <width>1267</width>
-    <height>683</height>
+    <height>655</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1267</width>
+    <height>632</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1267</width>
+    <height>655</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="Button_load_map">
+   <property name="minimumSize">
+    <size>
+     <width>1267</width>
+     <height>632</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>1267</width>
+     <height>632</height>
+    </size>
+   </property>
+   <widget class="QPushButton" name="buttonLoadMap">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -27,7 +51,7 @@
      <string>Load Map</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="Text_scale">
+   <widget class="QPlainTextEdit" name="textScale">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -37,7 +61,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="Button_save_scale">
+   <widget class="QPushButton" name="buttonSaveScale">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -50,7 +74,7 @@
      <string>Save Scale</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Label_map">
+   <widget class="QLabel" name="labelMap">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -63,7 +87,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="Text_points">
+   <widget class="QTextBrowser" name="textCoords">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -73,7 +97,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="Button_mark">
+   <widget class="QPushButton" name="buttonMark">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -86,7 +110,7 @@
      <string>Mark Points</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Button_save_points">
+   <widget class="QPushButton" name="buttonSaveCoords">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -99,16 +123,6 @@
      <string>Save</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1267</width>
-     <height>28</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
